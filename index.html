@@ -69,6 +69,43 @@ function renderSchedule(){let y=month.getFullYear(),m=month.getMonth(),first=new
 function changeMonth(n){month.setMonth(month.getMonth()+n);renderSchedule()}function toggleTask(i){tasks[i].done=!tasks[i].done;save();renderSchedule();renderHome()}
 function modal(title,fields,fn){document.getElementById("modalTitle").textContent=title;document.getElementById("modalBody").innerHTML=fields;document.getElementById("saveBtn").onclick=()=>{fn();closeModal()};document.getElementById("modalback").classList.add("show")}function closeModal(){document.getElementById("modalback").classList.remove("show")}
 function addLand(){modal("Add New Land",'<div class="field"><label>LAND NAME</label><input id="fName" placeholder="e.g. Lot 04"></div><div class="field"><label>AREA (HECTARES)</label><input id="fArea" type="number" step=".01"></div><div class="field"><label>IN-CHARGE</label><input id="fPerson"></div>',()=>{let name=fName.value.trim(),area=Number(fArea.value),person=fPerson.value.trim();if(!name||!area||!person)return toast("Complete the required fields.");lands.push({id:Date.now(),name,area,person,crop:"Palay (Rice)",status:"Not Started",progress:0,tasks:[["Land inspection","To schedule",false],["Land preparation","To schedule",false],["Planting","To schedule",false]]});save();renderLands();renderHome();toast("Land added.")})}
+
+function editLand(id){
+ let l=lands.find(x=>x.id===id);
+ modal("Edit Land Information",'<div class="field"><label>LAND NAME</label><input id="eName"></div><div class="field"><label>AREA (HECTARES)</label><input id="eArea" type="number" step=".01"></div><div class="field"><label>IN-CHARGE</label><input id="ePerson"></div><div class="field"><label>CROP</label><input id="eCrop"></div><div class="field"><label>STATUS</label><select id="eStatus"><option>Growing</option><option>In Preparation</option><option>Not Started</option></select></div>',()=>{
+ l.name=document.getElementById("eName").value.trim();
+ l.area=Number(document.getElementById("eArea").value)||l.area;
+ l.person=document.getElementById("ePerson").value.trim();
+ l.crop=document.getElementById("eCrop").value.trim();
+ l.status=document.getElementById("eStatus").value;
+ save();renderHome();renderLands();toast("Land information updated.");
+ });
+ document.getElementById("eName").value=l.name;
+ document.getElementById("eArea").value=l.area;
+ document.getElementById("ePerson").value=l.person;
+ document.getElementById("eCrop").value=l.crop;
+ document.getElementById("eStatus").value=l.status;
+}
+function addLandMaterial(id){
+ let l=lands.find(x=>x.id===id);
+ modal("Add Material",'<div class="field"><label>MATERIAL</label><select id="mName"><option>Urea Fertilizer</option><option>Complete Fertilizer</option><option>Organic Fertilizer</option><option>Insecticide</option><option>Herbicide</option><option>Rice Seeds</option><option>Other</option></select></div><div class="field"><label>QUANTITY</label><input id="mQty" type="number" step=".01"></div><div class="field"><label>UNIT</label><select id="mUnit"><option>bags</option><option>kg</option><option>liters</option><option>pieces</option></select></div>',()=>{
+ let qty=Number(document.getElementById("mQty").value);
+ if(qty<=0)return toast("Enter a valid quantity.");
+ (l.materials||(l.materials=[])).push({name:document.getElementById("mName").value,qty,unit:document.getElementById("mUnit").value});
+ save();renderHome();toast("Material added.");
+ });
+}
+function addLandCost(id){
+ let l=lands.find(x=>x.id===id);
+ modal("Add Cost",'<div class="field"><label>COST CATEGORY</label><select id="cName"><option>Land Preparation</option><option>Seeds</option><option>Fertilizer</option><option>Pesticides</option><option>Labor</option><option>Irrigation</option><option>Fuel / Transport</option><option>Other</option></select></div><div class="field"><label>AMOUNT (₱)</label><input id="cAmount" type="number" step=".01"></div>',()=>{
+ let amount=Number(document.getElementById("cAmount").value);
+ if(amount<=0)return toast("Enter a valid amount.");
+ (l.costs||(l.costs=[])).push({name:document.getElementById("cName").value,amount});
+ save();renderHome();toast("Cost added.");
+ });
+}
+function removeLandEntry(id,type,index){let l=lands.find(x=>x.id===id);l[type].splice(index,1);save();renderHome();}
+
 function addStock(){modal("Add Stock",'<div class="field"><label>ITEM</label><input id="sName"></div><div class="field"><label>QUANTITY</label><input id="sQty" type="number"></div><div class="field"><label>UNIT</label><select id="sUnit"><option>bags</option><option>kg</option><option>liters</option><option>pieces</option></select></div>',()=>{let name=sName.value.trim(),qty=Number(sQty.value),unit=sUnit.value;if(!name||qty<=0)return toast("Enter item and quantity.");let x=stock.find(s=>s.name.toLowerCase()===name.toLowerCase()&&s.unit===unit);if(x)x.qty+=qty;else stock.push({id:Date.now(),name,qty,unit,low:3,icon:"📦"});tx.unshift({name,type:"Stock in",qty,unit,date:new Date().toLocaleDateString()});save();renderInventory();toast("Inventory updated.")})}
 function addTask(){modal("Add Farm Activity",'<div class="field"><label>ACTIVITY</label><input id="tName" placeholder="e.g. Irrigation"></div><div class="field"><label>LAND</label><select id="tLand">'+lands.map(l=>'<option>'+l.name+'</option>').join("")+'</select></div><div class="field"><label>DATE</label><input id="tDate" type="date"></div><div class="field"><label>IN-CHARGE</label><input id="tPerson"></div>',()=>{if(!tName.value.trim()||!tDate.value)return toast("Activity and date required.");tasks.push({title:tName.value,land:tLand.value,date:tDate.value,person:tPerson.value,done:false});save();renderSchedule();renderHome();toast("Schedule added.")})}
 function toast(s){let e=document.getElementById("toast");e.textContent=s;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2200)}
