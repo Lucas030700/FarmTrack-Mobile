@@ -173,6 +173,50 @@ main{padding:10px 12px;flex:1;min-height:0;overflow:hidden}#home.page.active{dis
  .land.focused .detail-entry-body b{font-size:12px}
  .land.focused .entry-status{font-size:8px;padding:4px 6px}
 }
+
+/* Final iPhone checklist sizing and full-height scrolling */
+@media(max-width:600px){
+ .land.focused{
+   position:fixed!important;inset:0!important;z-index:999!important;
+   width:100vw!important;height:100dvh!important;max-height:100dvh!important;
+   box-sizing:border-box!important;overflow-x:hidden!important;overflow-y:auto!important;
+   -webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain;
+   padding:14px 14px calc(110px + env(safe-area-inset-bottom))!important;
+   border-radius:0!important;margin:0!important;
+ }
+ .land.focused .inline-detail,.land.focused .inline-detail.open{
+   display:block!important;max-height:none!important;height:auto!important;
+   overflow:visible!important;visibility:visible!important;opacity:1!important;
+   padding-bottom:8px!important;
+ }
+ .land.focused .inline-detail-inner,.land.focused .inlineBody{
+   display:block!important;height:auto!important;max-height:none!important;
+   overflow:visible!important;contain:none!important;
+ }
+ .land.focused .detail-section-head{margin:5px 0 9px!important}
+ .land.focused .detail-entry{
+   min-height:52px!important;height:auto!important;
+   padding:7px 9px!important;margin:6px 0!important;gap:9px!important;
+   border-radius:12px!important;box-sizing:border-box!important;
+ }
+ .land.focused .detail-entry .check{
+   width:30px!important;height:30px!important;min-width:30px!important;
+   flex:0 0 30px!important;border-radius:9px!important;font-size:13px!important;
+ }
+ .land.focused .detail-entry-body{min-width:0!important;flex:1 1 auto!important}
+ .land.focused .detail-entry-body b{
+   font-size:12px!important;line-height:1.25!important;font-weight:700!important;
+ }
+ .land.focused .detail-entry-body small{font-size:10px!important;margin-top:2px!important}
+ .land.focused .entry-status{font-size:9px!important;padding:4px 7px!important}
+}
+@media(max-width:380px){
+ .land.focused{padding-left:11px!important;padding-right:11px!important}
+ .land.focused .detail-entry{min-height:48px!important;padding:6px 7px!important;gap:7px!important}
+ .land.focused .detail-entry .check{width:28px!important;height:28px!important;min-width:28px!important;flex-basis:28px!important}
+ .land.focused .detail-entry-body b{font-size:11px!important}
+ .land.focused .entry-status{font-size:8px!important}
+}
 </style></head>
 <body><div class="app">
 <header><div class="brand">🌱 FarmTrack <small>Farm Monitoring System · Mobile</small></div><div class="hello">Magandang araw!</div><div class="sub">Farm Overview · Demo Workspace</div></header>
