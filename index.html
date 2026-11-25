@@ -145,6 +145,34 @@ main{padding:10px 12px;flex:1;min-height:0;overflow:hidden}#home.page.active{dis
 /* Smaller stage markers for a lighter, balanced mobile tracker */
 #home .stage-window-dot{width:25px!important;height:25px!important;flex-basis:25px!important;font-size:10px!important}
 #home .stage-window-item.current .stage-window-dot{width:32px!important;height:32px!important;flex-basis:32px!important;font-size:12px!important}
+
+/* Phone-first focused land detail: actions stay in normal flow, never cover checklist */
+@media(max-width:600px){
+ .app{width:100%;max-width:100%;height:100dvh;min-height:100dvh;overflow:hidden}
+ main{padding:8px 10px;min-height:0}
+ .land.focused{position:absolute;inset:0;width:100%;height:100%;max-height:100%;overflow-y:auto;overflow-x:hidden;padding:14px 14px calc(28px + env(safe-area-inset-bottom));overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+ .land.focused .inline-detail{overflow:visible;max-height:none}
+ .land.focused .focus-actions{position:static!important;top:auto!important;z-index:auto!important;display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:transparent!important;padding:0!important;margin:4px 0 12px!important}
+ .focus-actions .focus-back,.focus-actions .edit-land{position:static!important;flex:0 1 auto;min-height:40px;padding:9px 12px;margin:0!important;white-space:normal}
+ .land.focused .tabs{position:static;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:8px 0 12px}
+ .land.focused .tabs button{min-width:0;padding:10px 3px;font-size:11px}
+ .land.focused .inlineBody{position:relative;overflow:visible;padding-bottom:12px}
+ .land.focused .detail-section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:8px 0 12px}
+ .land.focused .detail-entry{position:relative;display:flex;align-items:center;gap:9px;min-height:64px;padding:11px 9px;margin:7px 0}
+ .land.focused .detail-entry .check{position:relative;z-index:1;flex:0 0 38px;width:38px;height:38px;display:grid;place-items:center;margin:0}
+ .land.focused .detail-entry-body{flex:1;min-width:0}
+ .land.focused .detail-entry-body b{font-size:13px;line-height:1.3;overflow-wrap:anywhere}
+ .land.focused .detail-entry-body small{font-size:11px;margin-top:4px}
+ .land.focused .entry-status{flex:none;white-space:nowrap}
+}
+@media(max-width:380px){
+ .land.focused{padding-left:11px;padding-right:11px}
+ .focus-actions .focus-back,.focus-actions .edit-land{font-size:11px;padding:8px 9px}
+ .land.focused .detail-entry{gap:7px;padding:9px 7px}
+ .land.focused .detail-entry .check{flex-basis:34px;width:34px;height:34px}
+ .land.focused .detail-entry-body b{font-size:12px}
+ .land.focused .entry-status{font-size:8px;padding:4px 6px}
+}
 </style></head>
 <body><div class="app">
 <header><div class="brand">🌱 FarmTrack <small>Farm Monitoring System · Mobile</small></div><div class="hello">Magandang araw!</div><div class="sub">Farm Overview · Demo Workspace</div></header>
