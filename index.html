@@ -86,6 +86,21 @@ main{padding:10px 12px;flex:1;min-height:0;overflow:hidden}#home.page.active{dis
  #home .day-toggle{padding:10px}
  #home .day-count{font-size:8px;padding:6px 7px}
 }
+
+.stage-window{position:relative;display:grid;grid-template-columns:1fr 1.18fr 1fr;align-items:start;gap:5px;padding:9px 0 4px;margin:3px 0 5px}
+.stage-window-line{position:absolute;left:16%;right:16%;top:22px;height:3px;border-radius:9px;background:#e7eee8}
+.stage-window-line i{display:block;width:50%;height:100%;margin:auto;background:#d4e5d8;border-radius:9px}
+.stage-window-item{position:relative;z-index:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:5px;color:#9aa69d}
+.stage-window-dot{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:#f1f5f2;border:1.5px solid #dce5de;color:#9aa69d;font-size:11px;font-weight:750;line-height:1}
+.stage-window-item small{font-size:9px;line-height:1.2;min-height:22px;display:flex;align-items:center;justify-content:center;overflow-wrap:anywhere;color:#8c9990}
+.stage-window-item em{font-style:normal;font-size:8px;line-height:1;color:#a4aea7}
+.stage-window-item.current{color:#276d3e}
+.stage-window-item.current .stage-window-dot{width:34px;height:34px;margin-top:-3px;background:#2d7845;border:2px solid #2d7845;color:#fff;box-shadow:0 3px 9px #24683b30;font-size:13px}
+.stage-window-item.current small{font-size:10px;font-weight:800;color:#245f37}
+.stage-window-item.current em{font-size:8px;font-weight:750;color:#3b8050}
+.stage-window-item.previous .stage-window-dot{background:#eaf3ec;border-color:#dceade;color:#6d9b78}
+.stage-window-item.previous small{color:#a1ada4}
+.stage-window-item.next .stage-window-dot{background:#f5f7f5;border-color:#e7ece8;color:#bdc7bf}
 </style></head>
 <body><div class="app">
 <header><div class="brand">🌱 FarmTrack <small>Farm Monitoring System · Mobile</small></div><div class="hello">Magandang araw!</div><div class="sub">Farm Overview · Demo Workspace</div></header>
@@ -124,7 +139,7 @@ function save(){localStorage.setItem("ft_lands",JSON.stringify(lands));localStor
 function page(id){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id===id));document.querySelectorAll(".nav").forEach(x=>x.classList.toggle("active",x.dataset.p===id||(id==="detail"&&x.dataset.p==="lands")));if(id==="home")renderHome();if(id==="lands")renderLands();if(id==="timeline")renderTimeline();if(id==="inventory")renderInventory();if(id==="schedule")renderSchedule();window.scrollTo(0,0)}
 function pill(s){return '<span class="pill '+(s==="Growing"?"":s==="In Preparation"?"yellow":"gray")+'">'+s+'</span>'}
 function cardLand(l){let opened=expandedLand===l.id;return '<div class="card land '+(opened?'expanded focused':'')+'" onclick="toggleHomeLand('+l.id+')"><div class="landtop"><div style="flex:1"><div class="landname">'+l.name+'</div><div class="meta">'+l.area+' hectares · '+l.person+'</div></div>'+pill(l.status)+'</div><div class="progressline"><span>Farm progress</span><b class="progress-value">'+l.progress+'%</b></div><div class="stage-track">'+farmStages(l)+'</div>'+inlineLandDetail(l)+'</div>'}
-function farmStages(l){let completed=cropStages.map((_,si)=>tasks.some(t=>t.landId===l.id&&t.stageIndex===si&&t.done)),done=completed.filter(Boolean).length;return '<div class="stage-track-scroll"><div class="stage-track-inner"><div class="stage-line"><i style="width:'+Math.max(0,Math.min(100,done/cropStages.length*100))+'%"></i></div><div class="stage-list">'+cropStages.map((n,i)=>'<div class="stage '+(completed[i]?'reached':'')+'"><span class="stage-dot">'+(completed[i]?'✓':'')+'</span><small>'+n+'</small></div>').join('')+'</div></div></div>'}
+function farmStages(l){let completed=cropStages.map((_,si)=>tasks.some(t=>t.landId===l.id&&t.stageIndex===si&&t.done)),done=completed.filter(Boolean).length,current=completed.findIndex(v=>!v);if(current<0)current=cropStages.length-1;let indices=[current-1,current,current+1];return '<div class="stage-window"><div class="stage-window-line"><i></i></div>'+indices.map((idx,pos)=>{let valid=idx>=0&&idx<cropStages.length,title=valid?cropStages[idx]:(idx<0?'Start':'Completed'),state=pos===1?'current':pos===0?'previous':'next',isDone=valid&&completed[idx];return '<div class="stage-window-item '+state+(isDone?' is-done':'')+'"><span class="stage-window-dot">'+(isDone?'✓':valid?idx+1:'·')+'</span><small>'+title+'</small><em>'+(pos===1?(isDone?'Completed':'To do'):pos===0?'Last done':'Up next')+'</em></div>'}).join('')+'</div>'}
 function inlineLandDetail(l){return '<div class="inline-detail '+(expandedLand===l.id?'open':'')+'" onclick="event.stopPropagation()"><div class="inline-detail-inner"><div class="focus-actions"><button class="focus-back" onclick="toggleHomeLand('+l.id+');event.stopPropagation()">‹ Back to My Lands</button><button class="secondary edit-land" onclick="editLand('+l.id+')">Edit land information</button></div><div class="tabs"><button class="active" onclick="inlineTab(\'overview\','+l.id+',this)">Overview</button><button onclick="inlineTab(\'activities\','+l.id+',this)">Activity</button><button onclick="inlineTab(\'materials\','+l.id+',this)">Materials</button><button onclick="inlineTab(\'costs\','+l.id+',this)">Cost</button></div><div class="inlineBody">'+landDetailHtml(l,'overview')+'</div></div></div>'}
 function toggleHomeLand(id){expandedLand=expandedLand===id?null:id;document.querySelector('.app').classList.toggle('land-focus',expandedLand!==null);document.querySelectorAll('.land').forEach(card=>{let match=(card.getAttribute('onclick')||'').match(/toggleHomeLand\((\d+)\)/);let cardId=match?Number(match[1]):null;let isOpen=cardId===expandedLand;card.classList.toggle('expanded',isOpen);card.classList.toggle('focused',isOpen);let detail=card.querySelector('.inline-detail');if(detail)detail.classList.toggle('open',isOpen)});}
 function inlineTab(t,id,btn){let box=btn.closest('.inline-detail');box.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');box.querySelector('.inlineBody').innerHTML=landDetailHtml(lands.find(x=>x.id===id),t)}
