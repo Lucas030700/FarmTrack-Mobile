@@ -130,6 +130,17 @@ main{padding:10px 12px;flex:1;min-height:0;overflow:hidden}#home.page.active{dis
 .stage-window-item.current em{font-size:9px;font-weight:750;color:var(--g2);opacity:1}
 .stage-window-item.previous .stage-window-dot,.stage-window-item.next .stage-window-dot{background:var(--mint);border-color:var(--line);color:#8ba694}
 .stage-window-item.previous small,.stage-window-item.next small{color:var(--muted)}
+
+/* Fix land card clipping and match the compact reference tracker */
+#home .landstrip{max-height:none!important;overflow-y:visible!important;overflow-x:auto!important;align-items:stretch}
+#home .land{height:auto!important;min-height:0;overflow:visible!important;align-self:stretch}
+#home .stage-track{height:auto!important;overflow:visible!important;margin:10px 0 2px;padding:0 3px}
+#home .farm-progress{height:auto!important;overflow:visible!important;margin-top:10px;padding-bottom:3px}
+#home .stage-window{height:auto!important;overflow:visible!important;padding:10px 3px 5px;gap:6px}
+#home .stage-window-item{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;min-height:0!important;padding:0 2px!important;overflow:visible!important}
+#home .stage-window-item small{min-height:24px;overflow:visible;word-break:normal;overflow-wrap:anywhere}
+#home .stage-window-dot{display:grid!important;width:32px;height:32px;flex:0 0 32px;border-radius:50%;align-items:center;justify-content:center}
+#home .stage-window-item.current .stage-window-dot{width:40px;height:40px;flex-basis:40px}
 </style></head>
 <body><div class="app">
 <header><div class="brand">🌱 FarmTrack <small>Farm Monitoring System · Mobile</small></div><div class="hello">Magandang araw!</div><div class="sub">Farm Overview · Demo Workspace</div></header>
